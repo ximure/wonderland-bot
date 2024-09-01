@@ -1,1 +1,1 @@
-nohup python3 sftp_watcher.py &
+nohup python3 wonderland_bot_v2.py &
