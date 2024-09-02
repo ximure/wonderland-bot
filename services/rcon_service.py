@@ -11,13 +11,11 @@ class RCONService:
         self.rcon_port = config.rcon_port
         self.rcon_password = config.rcon_password
 
-    def send_command(self, command):
-        print(f'пока не работает. Команда: {command}')
-        # try:
-        #     with MCRcon(self.rcon_host, self.rcon_password, port=self.rcon_port) as mcr:
-        #         response = mcr.command(command)
-        #         logging.info(f"RCON Response: {response}")
-        #         return response
-        # except Exception as e:
-        #     logging.error(f"Error sending RCON command: {command} - {e}")
-        #     return None
+    def send_command(self, command, message_sender_username):
+        try:
+            with MCRcon(self.rcon_host, self.rcon_password, port=self.rcon_port) as mcr:
+                response = mcr.command(f'/say <{message_sender_username}> {command}')
+                return response
+        except Exception as e:
+            logging.error(f"Error sending RCON command: {command} - {e}")
+            return None

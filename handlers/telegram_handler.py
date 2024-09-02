@@ -26,9 +26,7 @@ class TelegramHandler:
             return None
 
     def detect_message_type(self, message):
-        if message.text:
-            return MessageType.TEXT
-        elif message.sticker:
+        if message.sticker:
             return MessageType.STICKER
         elif message.voice:
             return MessageType.VOICE
@@ -44,5 +42,7 @@ class TelegramHandler:
             return MessageType.REPLY
         elif message.forward_from:
             return MessageType.FORWARD
+        elif message.text:
+            return MessageType.TEXT
         else:
             return MessageType.OTHER

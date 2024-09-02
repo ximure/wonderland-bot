@@ -37,12 +37,14 @@ async def handle_message(message: Message):
             elif message_type == MessageType.DOCUMENT:
                 telegram_message = f"{message_sender_username} отправил документ"
             elif message_type == MessageType.REPLY:
-                telegram_message = f"{message_sender_username} ответил на сообщение"
+                reply_message = message.reply_to_message.text
+                sent_message = message.text
+                telegram_message = f"'{reply_message}' -> '{sent_message}'"
             elif message_type == MessageType.FORWARD:
                 telegram_message = f"{message_sender_username} переслал сообщение"
             else:
                 telegram_message = f"{message_sender_username} отправил сообщение неизвестного типа"
-            rcon_service.send_command(telegram_message)
+            rcon_service.send_command(telegram_message, message_sender_username)
 
     except Exception as e:
         logging.error(f"Error handling message: {message} - {e}")
