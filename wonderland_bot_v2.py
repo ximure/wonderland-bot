@@ -15,8 +15,7 @@ def start_sftp_watcher():
         line_handler = LineHandler()
         telegram_handler = TelegramHandler()
 
-        for message in sftp_service.watch_log_file('/logs/latest.log', line_handler, telegram_handler):
-            telegram_handler.send_message(message)
+        sftp_service.watch_log_file('/logs/latest.log', line_handler, telegram_handler)
 
     except Exception as ex:
         logging.error(f"Error in SFTP watcher: {ex}")

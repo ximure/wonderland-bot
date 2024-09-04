@@ -28,17 +28,6 @@ class SFTPService:
             self.sftp = None
             self.transport = None
 
-    def reconnect(self):
-        self.close()
-        self.connect()
-
-    def close(self):
-        if self.sftp:
-            self.sftp.close()
-
-        if self.transport:
-            self.transport.close()
-
     def start_cache_timer(self, telegram_handler):
         if self.timer:
             self.timer.cancel()
@@ -54,34 +43,27 @@ class SFTPService:
 
     def watch_log_file(self, logs_path, handler, telegram_handler):
         while True:
-            try:
-                if self.sftp is None:
-                    logging.warning("SFTP connection lost. Reconnecting...")
-                    self.reconnect()
+            logs_file = self.sftp.file(logs_path, 'r')
+            initial_files_count = len(self.sftp.listdir("./logs"))
+            logs_file.seek(0, 2)
+            self.start_cache_timer(telegram_handler)
 
-                with self.sftp.file(logs_path, 'r') as logfile:
-                    logfile.seek(0, 2)
+            while True:
+                line = logs_file.readline()
+                current_files_count = len(self.sftp.listdir("./logs"))
+
+                if initial_files_count != current_files_count:
+                    logging.info(f"Current files count changes from {initial_files_count} to {current_files_count}. Reopening logs file")
+                    break
+
+                if not line:
+                    time.sleep(1)
+                    continue
+
+                message = handler.handle(line)
+
+                if message:
+                    self.cache.append(message)
+
+                if self.cache:
                     self.start_cache_timer(telegram_handler)
-
-                    while True:
-                        line = logfile.readline()
-                        if not line:
-                            time.sleep(1)
-                            continue
-
-                        message = handler.handle(line)
-
-                        if message:
-                            self.cache.append(message)
-
-                        if self.cache:
-                            self.start_cache_timer(telegram_handler)
-
-            except Exception as e:
-                logging.error(f"Error watching log file: {e}. Reconnecting...")
-                self.reconnect()
-                time.sleep(5)
-
-            finally:
-                self.flush_cache(telegram_handler)
-                self.close()
