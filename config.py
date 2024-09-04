@@ -15,6 +15,7 @@ class Config:
         if self.environment == 'DEV':
             self.telegram_token = os.getenv('TELEGRAM_DEV_TOKEN')
             self.telegram_chat_id = os.getenv('TELEGRAM_DEV_CHAT_ID')
+
         else:
             self.telegram_token = os.getenv('TELEGRAM_PROD_TOKEN')
             self.telegram_chat_id = os.getenv('TELEGRAM_PROD_CHAT_ID')

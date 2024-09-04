@@ -13,12 +13,13 @@ def start_sftp_watcher():
     try:
         sftp_service = SFTPService()
         line_handler = LineHandler()
+        telegram_handler = TelegramHandler()
 
-        for message in sftp_service.watch_log_file('/logs/latest.log', line_handler):
-            TelegramHandler().send_message(message)
+        for message in sftp_service.watch_log_file('/logs/latest.log', line_handler, telegram_handler):
+            telegram_handler.send_message(message)
 
-    except Exception as e:
-        logging.error(f"Error in SFTP watcher: {e}")
+    except Exception as ex:
+        logging.error(f"Error in SFTP watcher: {ex}")
 
 
 if __name__ == '__main__':

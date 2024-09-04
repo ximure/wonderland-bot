@@ -12,7 +12,7 @@ class SFTPService:
         self.sftp = None
         self.transport = None
         self.cache = []
-        self.cache_interval = 5
+        self.cache_interval = 3
         self.timer = None
         self.connect()
 
@@ -22,6 +22,7 @@ class SFTPService:
             self.transport.connect(username=config.sftp_username, password=config.sftp_password)
             self.sftp = paramiko.SFTPClient.from_transport(self.transport)
             logging.info("Successfully connected to SFTP server.")
+
         except Exception as e:
             logging.error(f"Error connecting to SFTP server: {e}")
             self.sftp = None
@@ -34,18 +35,20 @@ class SFTPService:
     def close(self):
         if self.sftp:
             self.sftp.close()
+
         if self.transport:
             self.transport.close()
 
     def start_cache_timer(self, telegram_handler):
         if self.timer:
             self.timer.cancel()
+
         self.timer = Timer(self.cache_interval, self.flush_cache, [telegram_handler])
         self.timer.start()
 
     def flush_cache(self, telegram_handler):
         if self.cache:
-            message_block = "\n".join(self.cache)
+            message_block = "".join(self.cache)
             telegram_handler.send_message(message_block)
             self.cache.clear()
 

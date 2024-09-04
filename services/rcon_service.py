@@ -16,6 +16,7 @@ class RCONService:
             with MCRcon(self.rcon_host, self.rcon_password, port=self.rcon_port) as mcr:
                 response = mcr.command(f'/say §7<{message_sender_username}> {command}')
                 return response
+
         except Exception as e:
             logging.error(f"Error sending RCON command: {command} - {e}")
             return None

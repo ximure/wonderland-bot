@@ -10,6 +10,7 @@ class LineHandler:
         try:
             if not re.search(LineHandler.player_message_regex, line):
                 return None
+
             return line[33:]
 
         except Exception as e:
