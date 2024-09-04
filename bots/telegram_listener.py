@@ -21,29 +21,34 @@ async def handle_message(message: Message):
         if str(message.chat.id) == config.telegram_chat_id:
             message_type = telegram_handler.detect_message_type(message)
             message_sender_username = message.from_user.username if message.from_user else "Unknown"
+            message_formatter = "§o"
 
             if message_type == MessageType.TEXT:
                 telegram_message = message.text
             elif message_type == MessageType.STICKER:
-                telegram_message = f"{message_sender_username} отправил стикер (эмодзи): {message.sticker.emoji}"
+                telegram_message = f"{message_formatter}отправил стикер (эмодзи): {message.sticker.emoji}"
             elif message_type == MessageType.VOICE:
-                telegram_message = f"{message_sender_username} отправил голосовое сообщение"
+                telegram_message = f"{message_formatter}отправил голосовое сообщение"
             elif message_type == MessageType.VIDEO_NOTE:
-                telegram_message = f"{message_sender_username} отправил видеосообщение"
+                telegram_message = f"{message_formatter}отправил видеосообщение"
             elif message_type == MessageType.PHOTO:
-                telegram_message = f"{message_sender_username} отправил фото"
+                telegram_message = f"{message_formatter}отправил фото"
             elif message_type == MessageType.AUDIO:
-                telegram_message = f"{message_sender_username} отправил аудио"
+                telegram_message = f"{message_formatter}отправил аудио"
             elif message_type == MessageType.DOCUMENT:
-                telegram_message = f"{message_sender_username} отправил документ"
+                telegram_message = f"{message_formatter}отправил документ"
             elif message_type == MessageType.REPLY:
                 reply_message = message.reply_to_message.text
                 sent_message = message.text
-                telegram_message = f"'{reply_message}' -> '{sent_message}'"
+
+                if reply_message is not None:
+                    telegram_message = f"{message_formatter}'{reply_message}' -> '{sent_message}'"
+                else:
+                    telegram_message = f"{message_formatter}ответил на стикер или что-то другое, не текстовое"
             elif message_type == MessageType.FORWARD:
-                telegram_message = f"{message_sender_username} переслал сообщение"
+                telegram_message = f"{message_formatter}переслал сообщение"
             else:
-                telegram_message = f"{message_sender_username} отправил сообщение неизвестного типа"
+                telegram_message = f"{message_formatter}отправил сообщение неизвестного типа"
             rcon_service.send_command(telegram_message, message_sender_username)
 
     except Exception as e:

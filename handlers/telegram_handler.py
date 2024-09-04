@@ -20,7 +20,6 @@ class TelegramHandler:
             )
             response.raise_for_status()
             return response.json()
-
         except requests.RequestException as e:
             logging.error(f"Error sending message to Telegram: {e}")
             return None
