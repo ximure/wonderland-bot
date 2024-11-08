@@ -14,9 +14,7 @@ def start_sftp_watcher():
         sftp_service = SFTPService()
         line_handler = LineHandler()
         telegram_handler = TelegramHandler()
-
         sftp_service.watch_log_file('/logs/latest.log', line_handler, telegram_handler)
-
     except Exception as ex:
         logging.error(f"Error in SFTP watcher: {ex}")
 
@@ -26,6 +24,5 @@ if __name__ == '__main__':
         sftp_thread = threading.Thread(target=start_sftp_watcher)
         sftp_thread.start()
         run_listener()
-
     except Exception as e:
         logging.error(f"Error in main: {e}")

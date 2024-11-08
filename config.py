@@ -1,4 +1,5 @@
 import os
+import logging
 
 from dotenv import load_dotenv
 
@@ -12,13 +13,14 @@ class Config:
         self.sftp_port = int(os.getenv('SFTP_PORT'))
         self.environment = os.getenv('ENVIRONMENT', 'DEV')
 
-        if self.environment == 'DEV':
-            self.telegram_token = os.getenv('TELEGRAM_DEV_TOKEN')
-            self.telegram_chat_id = os.getenv('TELEGRAM_DEV_CHAT_ID')
-
-        else:
+        if self.environment == 'PROD':
             self.telegram_token = os.getenv('TELEGRAM_PROD_TOKEN')
             self.telegram_chat_id = os.getenv('TELEGRAM_PROD_CHAT_ID')
+            logging.basicConfig(level=logging.INFO)
+        else:
+            self.telegram_token = os.getenv('TELEGRAM_DEV_TOKEN')
+            self.telegram_chat_id = os.getenv('TELEGRAM_DEV_CHAT_ID')
+            logging.basicConfig(level=logging.DEBUG)
 
         self.rcon_host = os.getenv('RCON_HOST')
         self.rcon_port = int(os.getenv('RCON_PORT'))

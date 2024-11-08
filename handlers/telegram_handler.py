@@ -20,7 +20,6 @@ class TelegramHandler:
             )
             response.raise_for_status()
             return response.json()
-
         except requests.RequestException as e:
             logging.error(f"Error sending message to Telegram: {e}")
             return None
@@ -28,30 +27,21 @@ class TelegramHandler:
     def detect_message_type(self, message):
         if message.sticker:
             return MessageType.STICKER
-
         elif message.voice:
             return MessageType.VOICE
-
         elif message.video_note:
             return MessageType.VIDEO_NOTE
-
         elif message.photo:
             return MessageType.PHOTO
-
         elif message.audio:
             return MessageType.AUDIO
-
         elif message.document:
             return MessageType.DOCUMENT
-
         elif message.reply_to_message:
             return MessageType.REPLY
-
         elif message.forward_from:
             return MessageType.FORWARD
-
         elif message.text:
             return MessageType.TEXT
-
         else:
             return MessageType.OTHER

@@ -22,7 +22,6 @@ class SFTPService:
             self.transport.connect(username=config.sftp_username, password=config.sftp_password)
             self.sftp = paramiko.SFTPClient.from_transport(self.transport)
             logging.info("Successfully connected to SFTP server.")
-
         except Exception as e:
             logging.error(f"Error connecting to SFTP server: {e}")
             self.sftp = None
@@ -31,7 +30,6 @@ class SFTPService:
     def start_cache_timer(self, telegram_handler):
         if self.timer:
             self.timer.cancel()
-
         self.timer = Timer(self.cache_interval, self.flush_cache, [telegram_handler])
         self.timer.start()
 
@@ -55,7 +53,7 @@ class SFTPService:
                 if initial_files_count != current_files_count:
                     logging.info(f"Current files count changes from {initial_files_count} to {current_files_count}. Reopening logs file")
                     break
-
+                
                 if not line:
                     time.sleep(1)
                     continue

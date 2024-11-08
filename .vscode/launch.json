@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Wonderland Bot V2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "./wonderland_bot_v2.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}

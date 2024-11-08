@@ -25,43 +25,32 @@ async def handle_message(message: Message):
 
             if message_type == MessageType.TEXT:
                 telegram_message = message.text
-
             elif message_type == MessageType.STICKER:
                 telegram_message = f"{message_formatter}отправил стикер (эмодзи): {message.sticker.emoji}"
-
             elif message_type == MessageType.VOICE:
                 telegram_message = f"{message_formatter}отправил голосовое сообщение"
-
             elif message_type == MessageType.VIDEO_NOTE:
                 telegram_message = f"{message_formatter}отправил видеосообщение"
-
             elif message_type == MessageType.PHOTO:
                 telegram_message = f"{message_formatter}отправил фото"
-
             elif message_type == MessageType.AUDIO:
                 telegram_message = f"{message_formatter}отправил аудио"
-
             elif message_type == MessageType.DOCUMENT:
                 telegram_message = f"{message_formatter}отправил документ"
-
             elif message_type == MessageType.REPLY:
                 reply_message = message.reply_to_message.text
                 sent_message = message.text
 
                 if reply_message is not None:
                     telegram_message = f"{message_formatter}'{reply_message}' -> '{sent_message}'"
-
                 else:
                     telegram_message = f"{message_formatter}ответил на стикер или что-то другое, не текстовое"
-
             elif message_type == MessageType.FORWARD:
                 telegram_message = f"{message_formatter}переслал сообщение"
-
             else:
                 telegram_message = f"{message_formatter}отправил сообщение неизвестного типа"
 
             rcon_service.send_command(telegram_message, message_sender_username)
-
     except Exception as e:
         logging.error(f"Error handling message: {message} - {e}")
 
@@ -75,7 +64,6 @@ async def start_telegram_listener():
     try:
         await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot)
-
     except Exception as e:
         logging.error(f"Error starting Telegram listener: {e}")
 
