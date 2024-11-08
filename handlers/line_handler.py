@@ -3,7 +3,8 @@ import re
 
 
 class LineHandler:
-    player_message_regex = '^\[\d{2}:\d{2}:\d{2}] \[Server thread\/INFO]: (?!\[Not Secure\])(ximure (joined the game|left the game)|<ximure> .+)'
+    player_vanish_list = []
+    player_message_regex = '^\[\d{2}:\d{2}:\d{2}] \[Server thread\/INFO]: (?!\[Not Secure\])(.* (joined the game|left the game)|<.*> .+)'
 
     @staticmethod
     def handle(line):
@@ -21,4 +22,7 @@ class LineHandler:
 
 
     def handle_command(line):
+        # todo: vanish command
+        # if line == '@vanish':
+        #     player_vanish_list +=
         logging.debug(f"handle_command(): processing {line} command")
